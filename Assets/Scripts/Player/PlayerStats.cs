@@ -1,9 +1,9 @@
-using System;
+using Platformer2D.GameManagers;
 using UnityEngine;
 
-namespace Platformer2D
+namespace Platformer2D.Player
 {
-    public class Player : Singleton<Player>
+    public class PlayerStats : Singleton<PlayerStats>
     {
         public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
         public float CurrentStamina { get => currentStamina; set => currentStamina = value; }
@@ -11,6 +11,7 @@ namespace Platformer2D
         public float MaxHealth { get => maxHealth; set => maxHealth = value; }
         public float MaxStamina { get => maxStamina; set => maxStamina = value; }
         public float MaxMagika { get => maxMagika; set => maxMagika = value; }
+        public Vector3 RespawnPoint { get; internal set; }
 
         [Header("Basic Stats")]
         [SerializeField] private float maxHealth = 100f;

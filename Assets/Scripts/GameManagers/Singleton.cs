@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Platformer2D
+namespace Platformer2D.GameManagers
 {
     public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {

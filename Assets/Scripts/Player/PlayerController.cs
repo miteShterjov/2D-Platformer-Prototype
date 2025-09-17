@@ -1,11 +1,13 @@
-using System;
+using Platformer2D.GameManagers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Platformer2D
+namespace Platformer2D.Player
 {
     public class PlayerController : Singleton<PlayerController>
     {
+        public bool IsLeft { get => isLeft; set => isLeft = value; }
+
         [Header("Move Settings")]
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private float _sprintMultiplier = 2f;
@@ -25,6 +27,7 @@ namespace Platformer2D
         private static readonly int jumpSpeed = Animator.StringToHash("jumpSpeed");
         private static readonly int onGround = Animator.StringToHash("isGrounded");
         private static readonly int isDashing = Animator.StringToHash("isDashing");
+        private static readonly int hurt = Animator.StringToHash("Hurt");
 
         private InputSystem_Actions _playerInput;
         private Rigidbody2D _rigidbody2D;
@@ -34,8 +37,9 @@ namespace Platformer2D
         private float _currentJumpCount;
         private float _defaultMoveSpeed;
         private int _lastDirection = 1; // 1 for right, -1 for left
-
         private bool _wasGrounded; // Add this field
+        private bool isLeft;
+
 
         protected override void Awake()
         {
@@ -63,7 +67,7 @@ namespace Platformer2D
             // spent stamina while sprinting
             if (Keyboard.current.leftShiftKey.isPressed)
             {
-                Player.Instance.UpdateStamina(-Time.deltaTime * _sprintStaminaCostPerSecond);
+                PlayerStats.Instance.UpdateStamina(-Time.deltaTime * _sprintStaminaCostPerSecond);
             }
             // reset the available jumps when grounded
             if (IsGrounded() && _currentJumpCount != _maxJumps) _currentJumpCount = _maxJumps;
@@ -114,18 +118,19 @@ namespace Platformer2D
 
         private void FlipPlayerSprite(float x)
         {
+            if (x == 1) IsLeft = true;
             transform.localScale = new Vector3(x, 1, 1);
         }
 
         private void PlayerJump()
         {
-            if (Player.Instance.CurrentStamina == 0) return;
+            if (PlayerStats.Instance.CurrentStamina == 0) return;
 
             if (_maxJumps > 0)
             {
                 PlayDustVFX();
                 _rigidbody2D.linearVelocity = new Vector2(_rigidbody2D.linearVelocity.x, _jumpForce);
-                Player.Instance.UpdateStamina(-_jumpStaminaCost);
+                PlayerStats.Instance.UpdateStamina(-_jumpStaminaCost);
                 _currentJumpCount--;
 
             }
@@ -133,7 +138,7 @@ namespace Platformer2D
 
         private void PlayerSprint()
         {
-            if (Player.Instance.CurrentStamina == 0) return;
+            if (PlayerStats.Instance.CurrentStamina == 0) return;
             if (Keyboard.current.leftShiftKey.isPressed) _moveSpeed *= _sprintMultiplier;
             PlayDustVFX();
         }

@@ -17,6 +17,7 @@ namespace Platformer2D.Player
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float maxStamina = 100f;
         [SerializeField] private float maxMagika = 100f;
+        [SerializeField] private int gems = 0;
         [Header("Regen Rates (per second)")]
         [SerializeField] private float healthRegenRate = 1f;
         [SerializeField] private float staminaRegenRate = 5f;
@@ -85,6 +86,8 @@ namespace Platformer2D.Player
 
             if (amount <= CurrentStamina) UpdateStamina(-amount);
         }
+
+        public void GetRichQuick() => gems++;
 
         public void SpendMagika(float amount)
         {

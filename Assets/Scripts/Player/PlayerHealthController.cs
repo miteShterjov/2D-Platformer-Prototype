@@ -1,6 +1,7 @@
 using System.Collections;
 using Platformer2D.Enemy;
 using Platformer2D.GameManagers;
+using Platformer2D.GameMech.PickUps;
 using UnityEngine;
 
 namespace Platformer2D.Player
@@ -14,7 +15,7 @@ namespace Platformer2D.Player
         private Rigidbody2D rb;
         private bool isInvincible = false;
         private float invincibilityTimer;
-        private static readonly int hurt = Animator.StringToHash("Hurt");
+        
 
         protected override void Awake()
         {
@@ -82,6 +83,8 @@ namespace Platformer2D.Player
                 DoPlayerTakeDamageSequence(collision.transform);
                 isInvincible = true;
             }
+
+            collision.GetComponent<IPickUps>()?.OnPickUpApplyEffect(gameObject);
         }
 
         private void DoPlayerTakeDamageSequence(Transform damageSource)
@@ -89,7 +92,7 @@ namespace Platformer2D.Player
             float alphaIndex = 0.6f;
             float alphaChangeDuration = 0.8f;
 
-            animator.SetTrigger(hurt);
+            PlayerAnimController.Instance.PlayerHurtAnimEvent();
             ModifySpriteAlpha(alphaIndex, alphaChangeDuration);
             KnockbackPlayer(damageSource.transform.position);
             DisablePlayerInput(knockbackDuration);

@@ -1,3 +1,4 @@
+using Platformer2D.Player;
 using UnityEngine;
 
 namespace Platformer2D.Misc
@@ -17,18 +18,13 @@ namespace Platformer2D.Misc
 
         void Start()
         {
-            if (Player.PlayerController.Instance.IsLeft)
+            if (PlayerController.Instance.IsFlipedX())
             {
                 speed = -speed;
                 spriteRenderer.flipX = true;
             }
 
             Destroy(gameObject, lifetime);
-        }
-
-        void Update()
-        {
-            
         }
 
         void FixedUpdate()
